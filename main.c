@@ -88,7 +88,7 @@ int module_start(SceSize argc, const void *args) {
 	sceAppMgrAppParamGetString(0, 12, titleid , 256);
 	
 	char fname[256];
-	snprintf(fname, 0x400, "ux0:data/hbRedirect/%s.txt", titleid);
+	snprintf(fname, 256, "ux0:data/hbRedirect/%s.txt", titleid);
 	SceUID fd = sceIoOpen(fname, SCE_O_RDONLY, 0777);
 	if (fd) {
 		sceIoRead(fd, part_name, 4);
