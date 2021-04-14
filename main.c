@@ -19,63 +19,63 @@ void hookFunction(uint32_t nid, const void* func){
 }
 
 int sceIoOpen_patched(const char *file, int flags, SceMode mode) {
-	char fname[256];
+	char fname[0x400];
 	if (file[1] == 'x') {
-		sprintf(fname, "%s%s", part_name, &file[3]);
+		snprintf(fname, 0x400, "%s%s", part_name, &file[3]);
 		return TAI_CONTINUE(int, ref[0], fname, flags, mode);
 	}
 	return TAI_CONTINUE(int, ref[0], file, flags, mode);
 }
 
 int sceIoRemove_patched(const char *file) {
-	char fname[256];
+	char fname[0x400];
 	if (file[1] == 'x') {
-		sprintf(fname, "%s%s", part_name, &file[3]);
+		snprintf(fname, 0x400, "%s%s", part_name, &file[3]);
 		return TAI_CONTINUE(int, ref[1], fname);
 	}
 	return TAI_CONTINUE(int, ref[1], file);
 }
 
 int sceIoRmdir_patched(const char *file) {
-	char fname[256];
+	char fname[0x400];
 	if (file[1] == 'x') {
-		sprintf(fname, "%s%s", part_name, &file[3]);
+		snprintf(fname, 0x400, "%s%s", part_name, &file[3]);
 		return TAI_CONTINUE(int, ref[2], fname);
 	}
 	return TAI_CONTINUE(int, ref[2], file);
 }
 
 int sceIoMkdir_patched(const char *file, SceMode mode) {
-	char fname[256];
+	char fname[0x400];
 	if (file[1] == 'x') {
-		sprintf(fname, "%s%s", part_name, &file[3]);
+		snprintf(fname, 0x400, "%s%s", part_name, &file[3]);
 		return TAI_CONTINUE(int, ref[3], fname, mode);
 	}
 	return TAI_CONTINUE(int, ref[3], file, mode);
 }
 
 int sceIoGetstat_patched(const char *file, SceIoStat *stat) {
-	char fname[256];
+	char fname[0x400];
 	if (file[1] == 'x') {
-		sprintf(fname, "%s%s", part_name, &file[3]);
+		snprintf(fname, 0x400, "%s%s", part_name, &file[3]);
 		return TAI_CONTINUE(int, ref[4], fname, stat);
 	}
 	return TAI_CONTINUE(int, ref[4], file, stat);
 }
 
 int sceIoChstat_patched(const char *file, SceIoStat *stat, int bits) {
-	char fname[256];
+	char fname[0x400];
 	if (file[1] == 'x') {
-		sprintf(fname, "%s%s", part_name, &file[3]);
+		snprintf(fname, 0x400, "%s%s", part_name, &file[3]);
 		return TAI_CONTINUE(int, ref[5], file, stat, bits);
 	}
 	return TAI_CONTINUE(int, ref[5], fname, stat, bits);
 }
 
 int sceIoDopen_patched(const char *file) {
-	char fname[256];
+	char fname[0x400];
 	if (file[1] == 'x') {
-		sprintf(fname, "%s%s", part_name, &file[3]);
+		snprintf(fname, 0x400, "%s%s", part_name, &file[3]);
 		return TAI_CONTINUE(int, ref[6], file);
 	}
 	return TAI_CONTINUE(int, ref[6], fname);
@@ -88,7 +88,7 @@ int module_start(SceSize argc, const void *args) {
 	sceAppMgrAppParamGetString(0, 12, titleid , 256);
 	
 	char fname[256];
-	sprintf(fname, "ux0:data/hbRedirect/%s.txt", titleid);
+	snprintf(fname, 0x400, "ux0:data/hbRedirect/%s.txt", titleid);
 	SceUID fd = sceIoOpen(fname, SCE_O_RDONLY, 0777);
 	if (fd) {
 		sceIoRead(fd, part_name, 4);
