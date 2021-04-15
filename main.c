@@ -90,8 +90,10 @@ int module_start(SceSize argc, const void *args) {
 	char fname[256];
 	snprintf(fname, 256, "ux0:data/hbRedirect/%s.txt", titleid);
 	SceUID fd = sceIoOpen(fname, SCE_O_RDONLY, 0777);
-	if (fd) {
-		sceIoRead(fd, part_name, 4);
+	if (fd >= 0) {
+		int l = sceIoRead(fd, part_name, 4);
+		if (part_name[l - 1] == ':') l--;
+		part_name[l] = 0;
 		sceIoClose(fd);
 	}
 	
